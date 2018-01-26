@@ -26,13 +26,15 @@
 #include "Gesture.h"
 #include "LeftCollar.h"
 #include "RightCollar.h"
+#include "Pocket.h"
 #include "LightManager.h"
 
 
 
-#define NUM_GESTURES 2
+#define NUM_GESTURES 3
 #define LEFT_COLLAR_PIN 1
 #define RIGHT_COLLAR_PIN 5
+#define POCKET_PIN 10
 
 
 
@@ -40,14 +42,10 @@ LightManager lightManager;
 CapSensorManager capSensorManager(&lightManager);
 LeftCollar leftCollar(&lightManager, LEFT_COLLAR_PIN);
 RightCollar rightCollar(&lightManager, RIGHT_COLLAR_PIN);
+Pocket pocket(&lightManager, POCKET_PIN);
 
-// Gesture** gestures = new Gesture*[NUM_GESTURES];
-// gestures[0] = new LeftCollar(&lightManager, LEFT_COLLAR_PIN);
 
-  Gesture* gestures[NUM_GESTURES] = {&leftCollar, &rightCollar};
-  
-//Gesture gestures[] = {leftCollar};
-
+Gesture* gestures[NUM_GESTURES] = {&leftCollar, &rightCollar, &pocket};
 
 void setup() {
   

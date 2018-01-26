@@ -37,12 +37,16 @@ class LightManager{
     
     void turnOn();
     void turnOff();
+
+    void turnOnPocket();
+    void turnOffPocket();
    
   private:
 
     void HSV_to_RGB(int h, int s, int v, int* colors);
     void fadeColor();
     void fadeTouchColor();
+    void updateButtonLed();
 
     CRGB leds[NUM_LEDS];
     
@@ -50,6 +54,8 @@ class LightManager{
     bool isTouchFading;
     bool fadeDirection;
     float h, s, v;
+    float pocketLedBrightness;
+    float targetPocketLedBrightness;
 
     bool lightOn;
 
@@ -63,6 +69,8 @@ LightManager::LightManager()
    s = 255.0;
    h = 0.0;
    lightOn =true;
+   pocketLedBrightness= 0.0;
+   targetPocketLedBrightness = 0.0;
 }
 
 void LightManager::setup()
@@ -81,6 +89,7 @@ void LightManager::update()
 {
     fadeColor();
     fadeTouchColor();
+    updateButtonLed();
 
     if(v>=1.0){
       lightOn =true;
@@ -90,6 +99,12 @@ void LightManager::update()
     }
 }
 
+
+void LightManager::updateButtonLed()
+{
+     pocketLedBrightness = pocketLedBrightness + ( targetPocketLedBrightness - pocketLedBrightness ) * 0.001;
+     analogWrite(LED_POCKET, pocketLedBrightness);
+}
 
 void LightManager::toggleOnOff()
 {
@@ -119,6 +134,17 @@ void LightManager::turnOff()
    v = 0.0;
    lightOn = false;
    digitalWrite(LED_COLLAR, LOW);
+}
+
+
+void LightManager::turnOnPocket()
+{
+    targetPocketLedBrightness = 255.0;
+}
+
+void LightManager::turnOffPocket()
+{
+  targetPocketLedBrightness = 0.0;
 }
 
 void LightManager::fadeColor()

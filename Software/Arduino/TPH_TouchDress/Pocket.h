@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-// Class managing the left collar gesture interpreted from the 
+// Class managing the pocket gesture interpreted from the 
 // capacitive sensing
 //
 // Based on ClickButton Class from raron
@@ -14,10 +14,10 @@
 #include "Gesture.h"
 
 
-class LeftCollar: public Gesture{
+class Pocket: public Gesture{
 public:
 
-    LeftCollar(LightManager* lightManager, int touchPin);
+    Pocket(LightManager* lightManager, int touchPin);
     
     void update(bool currState, int _touchPin);
 
@@ -41,7 +41,7 @@ public:
 };
 
 
-LeftCollar::LeftCollar(LightManager* lightManager, int touchPin): Gesture(lightManager,touchPin)
+Pocket::Pocket(LightManager* lightManager, int touchPin): Gesture(lightManager,touchPin)
 {
   _pin           = 0;
   _activeHigh    = HIGH;           // Assume active-hight button
@@ -62,18 +62,25 @@ LeftCollar::LeftCollar(LightManager* lightManager, int touchPin): Gesture(lightM
 
 
 
- void LeftCollar::update(bool currState, int _touchPin)
+ void Pocket::update(bool currState, int _touchPin)
  {   
  	  if(touchPin != _touchPin){
  	  	return;
  	  }
 
+     if(currState){
+          lightManager->turnOnPocket();
+     }
+     else{
+         lightManager->turnOffPocket();
+     }
+     
      updateGesture(currState);
      printGesture();
  }
 
  
- void LeftCollar::updateGesture(bool currState)
+ void Pocket::updateGesture(bool currState)
  {
        long now = (long)millis();      // get current time
       _btnState = currState;  // current appearant button state
@@ -112,29 +119,29 @@ LeftCollar::LeftCollar(LightManager* lightManager, int touchPin): Gesture(lightM
  }
 
 
-  void LeftCollar::printGesture()
+  void Pocket::printGesture()
  {
      // Save click codes in LEDfunction, as click codes are reset at next Update()
       if (clicks != 0) function = clicks;
     
-      if(clicks == 1) Serial.println("LeftCollar::SINGLE click");
+      if(clicks == 1) Serial.println("Pocket::SINGLE click");
     
       if(function == 2) {
-            Serial.println("LeftCollar::DOUBLE click");
-            lightManager->toggleOnOff();
+            Serial.println("Pocket::DOUBLE click");
+            //lightManager->toggleOnOff();
       }
     
-      if(function == 3) Serial.println("LeftCollar::RIPLE click");
+      if(function == 3) Serial.println("Pocket::RIPLE click");
     
       if(function == -1)
       {
           //lightManager->setFading(true);
-          Serial.println("LeftCollar::SINGLE LONG click");
+          Serial.println("Pocket::SINGLE LONG click");
       }
     
-      if(function == -2) Serial.println("LeftCollar::DOUBLE LONG click");
+      if(function == -2) Serial.println("Pocket::DOUBLE LONG click");
     
-      if(function == -3) Serial.println("LeftCollar::TRIPLE LONG click");
+      if(function == -3) Serial.println("Pocket::TRIPLE LONG click");
     
       function = 0;
 
